@@ -88,11 +88,14 @@ Formatting rules:
 STEP 4 — UPDATE DEDUP STATE
 After posting, update state/seen.json: add an entry for each NEW item's URL with
 today's date (YYYY-MM-DD), then remove any entries whose date is more than 60 days
-ago. Write the file (valid JSON, sorted keys), then commit and push it to main:
+ago. Write the file (valid JSON, sorted keys), then commit and push it to the main
+branch. The session runs on a claude/-prefixed working branch, so push the current
+commit explicitly to main with HEAD:main (a plain "git push origin main" would
+re-push the unchanged local main and lose your commit):
 
     git add state/seen.json
     git commit -m "chore: update digest dedup state (<YYYY-MM-DD>)"
-    git push origin main
+    git push origin HEAD:main
 
 If there were no new items, still prune old entries and push only if the file
 changed.
