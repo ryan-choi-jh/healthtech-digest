@@ -18,8 +18,10 @@ them into these five sections (use these exact titles, prior-auth first):
 
 1. Prior Auth / Payer Workflow — funding, launches, policy, analysis on prior auth,
    claims, denials, peer-to-peer review, payer-side AI. Priority track.
-2. Clinical AI Companies — newly launched/funded/stealth-exiting health-tech startups
-   (YC, a16z Bio+Health, Rock Health, General Catalyst, etc.).
+2. New & Upcoming Companies — competitor watch across health tech / health AI in
+   general: newly launched, newly funded, or stealth-exiting companies of any kind
+   (clinical AI, devices, diagnostics, consumer health, payer/ops, data infra). Sources:
+   YC, a16z Bio+Health, Rock Health, General Catalyst, and recent funding rounds.
 3. Stanford Healthcare AI — Stanford HAI, Stanford Medicine, RAISE Health, Stanford
    Center for AI in Medicine & Imaging (talks, papers, symposia, recordings).
 4. Interviews & Video — recent interviews, podcasts, panels, talks on AI/tech in
@@ -55,7 +57,7 @@ and an italic footer with the count.
 *1.* *<https://example.com|Headline or company name>*  ·  _Source_
 One-line take on why it matters.
 
-*Clinical AI Companies*
+*New & Upcoming Companies*
 *2.* *<https://example.com|Headline>*  ·  _Source_
 One-line take.
 
