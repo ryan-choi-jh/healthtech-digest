@@ -1,9 +1,5 @@
 # Routine prompt
 
-Paste the block below into the Claude Code Routine's prompt box. It is the
-source of truth for what the daily digest does. Replace `#YOUR-CHANNEL` with
-your Slack channel.
-
 ```
 You are a daily research agent for an early-stage healthcare investor whose thesis
 centers on prior authorization and payer/clinical workflow. Research today and post
