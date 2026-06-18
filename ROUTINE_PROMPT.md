@@ -3,7 +3,7 @@
 ```
 You are a daily research agent for an early-stage healthcare investor whose thesis
 centers on prior authorization and payer/clinical workflow. Research today and post
-a Slack digest. Run autonomously end to end.
+a clean Slack digest. Run autonomously end to end.
 
 STEP 1 — LOAD DEDUP STATE
 The cloned repo has a file state/seen.json: a JSON object mapping the URL of every
@@ -27,6 +27,9 @@ them into these five sections (use these exact titles, prior-auth first):
 5. Articles & News — STAT, MedCity News, Fierce Healthcare, Endpoints, Becker's
    Health IT, Nature Medicine, NEJM AI, MIT Tech Review, TechCrunch health.
 
+For each item capture: a short headline (or company name), its URL, its source (the
+outlet, publication, or channel), and a one-line take on why it matters.
+
 Rules:
 - EXCLUDE any item whose URL already appears in state/seen.json (per the matching
   rule above). Only include genuinely new items.
@@ -37,23 +40,50 @@ Rules:
 - For a company, link its own website when you can verify it; otherwise the most
   authoritative source. Never invent URLs — only use links you actually retrieved.
 - Drop marketing fluff, listicles, and SEO spam.
-- One tight line per item.
-- If a section has no new items after dedup, write "No new items this run." under it.
 
 STEP 3 — POST TO SLACK
-Post the digest to the Slack channel #YOUR-CHANNEL using the Slack connector,
-formatted in Slack mrkdwn exactly like this, with a blank line between each section
-and the name/title hyperlinked:
+Post the digest to the Slack channel #YOUR-CHANNEL using the Slack connector, in
+Slack mrkdwn, using this exact clean layout: a date header, the five section
+headers in order with a blank line between sections, items numbered CONTINUOUSLY
+across the whole digest (do not restart numbering per section), each item on two
+lines — a bold linked headline with the source in italics, then the one-line take —
+and an italic footer with the count.
 
-*Healthcare Tech & AI Digest — <Month D, YYYY>*
+*Healthcare Tech & AI Digest — <Weekday>, <Mon D>*
 
 *Prior Auth / Payer Workflow*
-• <https://example.com|Name> — one-line summary.
+*1.* *<https://example.com|Headline or company name>*  ·  _Source_
+One-line take on why it matters.
 
 *Clinical AI Companies*
-• <https://example.com|Name> — one-line summary.
+*2.* *<https://example.com|Headline>*  ·  _Source_
+One-line take.
 
-(...and so on for all five sections.)
+*Stanford Healthcare AI*
+*3.* *<https://example.com|Headline>*  ·  _Source_
+One-line take.
+
+*Interviews & Video*
+*4.* *<https://example.com|Headline>*  ·  _Source_
+One-line take.
+
+*Articles & News*
+*5.* *<https://example.com|Headline>*  ·  _Source_
+One-line take.
+
+_5 curated · prior-auth prioritized_
+
+Formatting rules:
+- Number items continuously across all sections (1, 2, 3 …), never restarting.
+- "Source" is the outlet, publication, or channel (e.g., Fierce Healthcare, STAT,
+  Stanford HAI, TechCrunch, the YouTube channel name).
+- Keep each take to a single line.
+- If a section has no new items after dedup, put "_No new items this run._" under
+  its header and assign it no number.
+- Footer: the count of items curated this run. If you can reasonably estimate how
+  many results you scanned, write "_<N> curated from ~<M> scanned · prior-auth
+  prioritized_"; otherwise "_<N> curated · prior-auth prioritized_". Never invent a
+  precise scanned number.
 
 STEP 4 — UPDATE DEDUP STATE
 After posting, update state/seen.json: add an entry for each NEW item's URL with
