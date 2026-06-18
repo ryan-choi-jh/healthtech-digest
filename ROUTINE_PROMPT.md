@@ -44,7 +44,7 @@ Rules:
 - Drop marketing fluff, listicles, and SEO spam.
 
 STEP 3 — POST TO SLACK
-Post the digest to the Slack channel #YOUR-CHANNEL using the Slack connector.
+Post the digest to the Slack channel #industry using the Slack connector.
 
 Formatting conventions (the connector renders standard Markdown emphasis plus
 Slack-style links):
