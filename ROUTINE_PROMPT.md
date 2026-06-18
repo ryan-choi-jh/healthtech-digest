@@ -44,33 +44,50 @@ Rules:
 - Drop marketing fluff, listicles, and SEO spam.
 
 STEP 3 — POST TO SLACK
-Post the digest to the Slack channel #YOUR-CHANNEL using the Slack connector, in
-Slack mrkdwn, using this exact clean layout: a date header, the five section
-headers in order with a blank line between sections, items numbered CONTINUOUSLY
-across the whole digest (do not restart numbering per section), each item on two
-lines — a bold linked headline with the source in italics, then the one-line take —
-and an italic footer with the count.
+Post the digest to the Slack channel #YOUR-CHANNEL using the Slack connector.
 
-*Healthcare Tech & AI Digest — <Weekday>, <Mon D>*
+Formatting conventions (the connector renders standard Markdown emphasis plus
+Slack-style links):
+- **Bold** = DOUBLE asterisks. Use it for the title, every section header, and each
+  item number.
+- `code` = backticks. Wrap each item's source tag in backticks.
+- Linked headline = Slack link syntax: <https://url|Headline>. Do not wrap it in
+  emphasis.
+- _Italic_ = underscores. Use it only for the footer.
+- Separate each section from the next with a divider line: ──────────
 
-*Prior Auth / Payer Workflow*
-*1.* *<https://example.com|Headline or company name>*  ·  _Source_
+Use this exact layout — a bold title, then the five sections in order each preceded
+by (after the first) a divider, items numbered CONTINUOUSLY across the whole digest
+(never restarting per section), each item on two lines, and an italic footer:
+
+**Healthcare Tech & AI Digest — <Weekday>, <Mon D>**
+
+**Prior Auth / Payer Workflow**
+**1.** <https://example.com|Headline or company name>  ·  `Source`
 One-line take on why it matters.
 
-*New & Upcoming Companies*
-*2.* *<https://example.com|Headline>*  ·  _Source_
+──────────
+
+**New & Upcoming Companies**
+**2.** <https://example.com|Headline>  ·  `Source`
 One-line take.
 
-*Stanford Healthcare AI*
-*3.* *<https://example.com|Headline>*  ·  _Source_
+──────────
+
+**Stanford Healthcare AI**
+**3.** <https://example.com|Headline>  ·  `Source`
 One-line take.
 
-*Interviews & Video*
-*4.* *<https://example.com|Headline>*  ·  _Source_
+──────────
+
+**Interviews & Video**
+**4.** <https://example.com|Headline>  ·  `Source`
 One-line take.
 
-*Articles & News*
-*5.* *<https://example.com|Headline>*  ·  _Source_
+──────────
+
+**Articles & News**
+**5.** <https://example.com|Headline>  ·  `Source`
 One-line take.
 
 _5 curated · prior-auth prioritized_
@@ -81,7 +98,7 @@ Formatting rules:
   Stanford HAI, TechCrunch, the YouTube channel name).
 - Keep each take to a single line.
 - If a section has no new items after dedup, put "_No new items this run._" under
-  its header and assign it no number.
+  its (bold) header and assign it no number. Still include its divider.
 - Footer: the count of items curated this run. If you can reasonably estimate how
   many results you scanned, write "_<N> curated from ~<M> scanned · prior-auth
   prioritized_"; otherwise "_<N> curated · prior-auth prioritized_". Never invent a
