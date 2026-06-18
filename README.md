@@ -1,15 +1,27 @@
 # healthtech-digest
 
-A daily research agent that surfaces new developments in **healthcare technology
-and AI** and posts a skimmable digest to Slack every morning.
+Workspace for a **Claude Code Routine** that posts a daily healthcare technology
+& AI digest to Slack — cloud-hosted, runs on your Claude subscription, no laptop
+required and no separate API key.
 
-It runs fully in the cloud on GitHub Actions — no laptop required. Each run uses
-Claude with web search to research the last 7 days, deduplicates against what it
-has already surfaced, and posts a themed digest to a Slack channel.
+> This repo is just the workspace the Routine clones on each run. The research,
+> formatting, and Slack delivery are driven entirely by the Routine's prompt
+> (see below) — there's no code to run here.
 
-## What it produces
+## How it works
 
-A single Slack message, sectioned by theme, one hyperlinked line per item:
+A scheduled Claude Code Routine runs every morning at 8am, researches the last 7
+days of healthcare-tech and AI news with web search, and posts a themed digest
+to a Slack channel via the Slack connector. Routines run on Anthropic-managed
+cloud infrastructure and draw down your subscription usage like an interactive
+session.
+
+Docs: <https://code.claude.com/docs/en/routines>
+
+## Output format
+
+A single Slack message, sectioned by theme (prior auth first), one hyperlinked
+line per item, with *"No new items this run."* under any empty section:
 
 ```
 *Healthcare Tech & AI Digest — June 18, 2026*
@@ -30,85 +42,42 @@ A single Slack message, sectioned by theme, one hyperlinked line per item:
 • <…|STAT — Who'll pay for AI in health care?> — FDA has cleared 1,357 AI devices, few reimbursed.
 ```
 
-Sections with nothing new say *"No new items this run."* rather than padding.
-
-## How it works
-
-- **`digest.py`** — the research script. Drives a Claude (`claude-opus-4-8`) web-search
-  pass over the last 7 days, parses the structured result, drops items already
-  seen, formats Slack mrkdwn, and posts it.
-- **`.github/workflows/daily-digest.yml`** — the daily cron trigger (8am Pacific)
-  plus the step that commits updated dedup state back to the repo.
-- **`state/seen.json`** — committed dedup state. Each run records the URLs it
-  surfaced (with the date) so the same item is not repeated. Entries older than
-  60 days are pruned automatically.
-
-### Research tracks
-
-The digest is organized into five themed sections, with prior auth / payer
-workflow prioritized:
-
-1. **Prior Auth / Payer Workflow** — funding, launches, policy, and analysis on
-   prior authorization, claims, denials, peer-to-peer review, payer-side AI.
-2. **Clinical AI Companies** — newly launched/funded/stealth-exiting health-tech
-   startups (YC, a16z Bio+Health, Rock Health, General Catalyst, etc.).
-3. **Stanford Healthcare AI** — Stanford HAI, Stanford Medicine, RAISE Health,
-   and the Stanford Center for AI in Medicine & Imaging.
-4. **Interviews & Video** — recent interviews, podcasts, panels, and talks.
-5. **Articles & News** — STAT, MedCity News, Fierce Healthcare, Endpoints,
-   Becker's Health IT, Nature Medicine, NEJM AI, MIT Tech Review, and others.
-
 ## Setup
 
-### 1. Create a Slack incoming webhook
+### 1. Connect Slack (once)
 
-1. Go to <https://api.slack.com/apps> → **Create New App** → *From scratch*.
-2. Enable **Incoming Webhooks**, then **Add New Webhook to Workspace** and pick
-   the channel you want the digest posted to.
-3. Copy the webhook URL (looks like `https://hooks.slack.com/services/T…/B…/…`).
+- Go to **https://claude.ai/customize/connectors**
+- Enable the **Slack** connector and authorize it for your workspace/channel
+  (invite the Claude app to the channel if it's private)
 
-### 2. Add repository secrets
+### 2. Create the Routine
 
-In this repo: **Settings → Secrets and variables → Actions → New repository
-secret**. Add both:
+- Go to **https://claude.ai/code/routines** → **New routine**
+- **Name:** `Healthcare Tech Daily Digest`
+- **Prompt:** paste the brief from [`ROUTINE_PROMPT.md`](./ROUTINE_PROMPT.md); pick
+  **Opus** in the model selector
+- **Repositories:** select this repo (`healthtech-digest`) as the workspace
+- **Environment:** leave **Default** (Trusted). If a test run can't reach some
+  news sites, edit the environment → **Network access** → **Full**.
 
-| Secret name         | Value                                            |
-| ------------------- | ------------------------------------------------ |
-| `ANTHROPIC_API_KEY` | Your Anthropic API key                           |
-| `SLACK_WEBHOOK_URL` | The Slack incoming webhook URL from step 1       |
+### 3. Schedule it
 
-These are read from the environment at runtime — never commit them to the repo.
+- **Select a trigger** → **Schedule** → **Daily** → **8:00 AM** in your timezone.
+  Routines honor your wall-clock time and adjust for daylight saving, so 8am
+  Pacific stays 8am year-round.
 
-### 3. (Optional) Test it now
+### 4. Connectors & test
 
-Trigger a run by hand from the **Actions** tab → *Daily Healthcare Tech Digest*
-→ **Run workflow**. The digest should appear in your Slack channel within a
-minute or two, and the run will commit an updated `state/seen.json`.
+- On the **Connectors** tab, confirm **Slack** is included; remove others
+- Click **Create**, then **Run now** to fire a test. Open the run session to
+  confirm it actually posted to Slack (a green status only means no infra error).
 
-You can also run it locally:
+## Notes
 
-```bash
-pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
-export SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
-python digest.py
-```
-
-## Schedule
-
-The workflow runs daily on the cron in `daily-digest.yml`. GitHub Actions cron
-is **UTC and does not observe daylight saving**, so:
-
-- `0 15 * * *` → **8:00 AM PDT** (summer) / 7:00 AM PST (winter) — the default.
-- `0 16 * * *` → 9:00 AM PDT / **8:00 AM PST** (winter).
-
-Pick the line that matches the season you care about most, or adjust twice a
-year. Scheduled runs can be delayed by a few minutes during periods of high
-GitHub load.
-
-## Tuning
-
-- **Lookback window / memory** — `LOOKBACK_DAYS` (default 7) and `STATE_TTL_DAYS`
-  (default 60) at the top of `digest.py`.
-- **Sources, sections, filtering** — edit `SECTIONS` and `SYSTEM_PROMPT` in
-  `digest.py`.
+- Runs on your Claude subscription usage (no API key, no pay-as-you-go billing).
+  Check usage at <https://claude.ai/settings/usage>.
+- The digest uses a 7-day rolling window. Routines don't persist dedup state
+  across runs, so an item may occasionally repeat day-to-day.
+- To tune sources, sections, or the schedule, edit the Routine's prompt and
+  trigger at <https://claude.ai/code/routines> (keep
+  [`ROUTINE_PROMPT.md`](./ROUTINE_PROMPT.md) in sync as the source of truth).
